@@ -1,17 +1,19 @@
-import { ExternalLink, Clock } from 'lucide-react';
+import { ExternalLink, Clock, Target } from 'lucide-react';
 import { SkillTag } from './SkillTag';
 import type { Issue } from '@/types';
+import type { ScoredIssue } from '@/services/matching';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface IssueCardProps {
-  issue: Issue;
+  issue: ScoredIssue | Issue;
 }
 
 function formatTimeAgo(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
   const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-  
+
   if (diffInDays === 0) return 'Today';
   if (diffInDays === 1) return '1 day ago';
   if (diffInDays < 7) return `${diffInDays} days ago`;
@@ -76,9 +78,31 @@ export function IssueCard({ issue }: IssueCardProps) {
       </div>
 
       <div className="flex items-center justify-between mt-4 pt-3 border-t-2 border-foreground">
-        <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
-          <Clock className="w-3 h-3" />
-          {formatTimeAgo(issue.created_at)}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
+            <Clock className="w-3 h-3" />
+            {formatTimeAgo(issue.created_at)}
+          </div>
+          {'matchScore' in issue && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center gap-1 px-2 py-0.5 bg-primary text-primary-foreground border border-foreground text-xs font-mono font-bold">
+                    <Target className="w-3 h-3" />
+                    {Math.round(issue.matchScore.total)}%
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <div className="space-y-1 text-xs">
+                    <p className="font-bold">Why recommended:</p>
+                    {issue.matchScore.breakdown.map((reason, i) => (
+                      <p key={i}>• {reason}</p>
+                    ))}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
         <a
           href={issue.html_url}

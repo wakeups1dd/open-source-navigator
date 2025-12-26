@@ -1,11 +1,13 @@
-import { Star, GitFork, AlertCircle, ExternalLink } from 'lucide-react';
+import { Star, GitFork, AlertCircle, ExternalLink, Info } from 'lucide-react';
 import { ScoreBadge } from './ScoreBadge';
 import { SkillTag } from './SkillTag';
 import type { Repository } from '@/types';
+import type { ScoredRepository } from '@/services/matching';
 import { Link } from 'react-router-dom';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface RepoCardProps {
-  repository: Repository;
+  repository: ScoredRepository | Repository;
 }
 
 function formatNumber(num: number): string {
@@ -37,7 +39,28 @@ export function RepoCard({ repository }: RepoCardProps) {
             </p>
           </div>
         </div>
-        <ScoreBadge score={repository.contributionScore} />
+        {'matchScore' in repository ? (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="flex items-center gap-2">
+                  <ScoreBadge score={Math.round(repository.matchScore.total)} />
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs">
+                <div className="space-y-1 text-xs">
+                  <p className="font-bold">Match Breakdown:</p>
+                  {repository.matchScore.breakdown.map((reason, i) => (
+                    <p key={i}>• {reason}</p>
+                  ))}
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <ScoreBadge score={repository.contributionScore || 50} />
+        )}
       </div>
 
       <div className="flex flex-wrap gap-2 mt-4">

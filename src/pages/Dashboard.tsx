@@ -1,97 +1,137 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/Sidebar';
 import { RepoCard } from '@/components/RepoCard';
 import { IssueCard } from '@/components/IssueCard';
 import { FilterButton } from '@/components/FilterButton';
 import { SkillTag } from '@/components/SkillTag';
+import { DashboardSkeleton } from '@/components/SkeletonLoader';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
-import { mockRepositories, mockIssues } from '@/data/mockData';
+import { useRecommendations, useRateLimit } from '@/hooks/useGitHubData';
+import { githubService } from '@/services/github';
 import type { FilterMode } from '@/types';
-import { Sparkles, BookOpen, Target } from 'lucide-react';
+import { Sparkles, BookOpen, Target, RefreshCw, AlertCircle, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Dashboard() {
   const { user } = useAuth();
   const { preferences } = useUserPreferences();
   const [filterMode, setFilterMode] = useState<FilterMode>('all');
+  const { repositories, issues, loading, error, refetch } = useRecommendations();
+  const { rateLimit } = useRateLimit();
 
-  const filteredRepos = useMemo(() => {
-    let repos = [...mockRepositories];
-    
-    // Filter by user's languages
-    if (preferences.languages.length > 0) {
-      repos = repos.filter(repo => 
-        preferences.languages.includes(repo.language) ||
-        repo.topics.some(t => preferences.languages.map(l => l.toLowerCase()).includes(t.toLowerCase()))
-      );
-    }
+  // Set GitHub token when user is authenticated
+  useEffect(() => {
+    // In a real implementation, you'd get the GitHub access token from OAuth
+    // For now, we'll use unauthenticated requests
+    // githubService.setToken(user?.githubToken);
+  }, [user]);
 
-    // Apply filter mode
+  // Filter data based on filter mode
+  const filteredRepos = repositories.filter(repo => {
     switch (filterMode) {
       case 'beginner':
-        repos = repos.filter(r => r.contributionScore >= 85);
-        break;
+        return repo.matchScore.total >= 70;
       case 'gsoc':
-        repos = repos.filter(r => r.topics.includes('gsoc'));
-        break;
+        return repo.topics?.includes('gsoc');
       case 'hacktoberfest':
-        repos = repos.filter(r => r.topics.includes('hacktoberfest'));
-        break;
+        return repo.topics?.includes('hacktoberfest');
+      default:
+        return true;
     }
+  });
 
-    return repos.sort((a, b) => b.contributionScore - a.contributionScore);
-  }, [preferences.languages, filterMode]);
-
-  const filteredIssues = useMemo(() => {
-    let issues = [...mockIssues];
-
-    // Filter by user's skills
-    if (preferences.languages.length > 0 || preferences.frameworks.length > 0) {
-      const allSkills = [...preferences.languages, ...preferences.frameworks].map(s => s.toLowerCase());
-      issues = issues.filter(issue =>
-        issue.requiredSkills.some(skill => allSkills.includes(skill.toLowerCase()))
-      );
-    }
-
-    // Filter by experience level
-    switch (preferences.experienceLevel) {
-      case 'beginner':
-        issues = issues.filter(i => i.difficulty === 'easy');
-        break;
-      case 'intermediate':
-        issues = issues.filter(i => ['easy', 'medium'].includes(i.difficulty));
-        break;
-    }
-
-    // Apply filter mode
+  const filteredIssues = issues.filter(issue => {
     switch (filterMode) {
       case 'beginner':
-        issues = issues.filter(i => i.difficulty === 'easy');
-        break;
+        return issue.difficulty === 'easy';
       case 'gsoc':
-        issues = issues.filter(i => i.labels.some(l => l.name.toLowerCase().includes('gsoc')));
-        break;
+        return issue.labels.some(l => l.name.toLowerCase().includes('gsoc'));
       case 'hacktoberfest':
-        issues = issues.filter(i => i.labels.some(l => l.name.toLowerCase().includes('hacktoberfest')));
-        break;
+        return issue.labels.some(l => l.name.toLowerCase().includes('hacktoberfest'));
+      default:
+        return true;
     }
+  });
 
-    return issues;
-  }, [preferences, filterMode]);
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <DashboardSkeleton />
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <main className="flex-1 p-8 flex items-center justify-center">
+          <div className="brutal-card p-8 max-w-md text-center">
+            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
+            <h2 className="font-mono font-bold text-xl mb-2">Failed to Load Data</h2>
+            <p className="text-muted-foreground mb-4">
+              {error.message || 'Unable to fetch GitHub data. Please try again.'}
+            </p>
+            <Button onClick={refetch}>
+              <RefreshCw className="w-4 h-4" />
+              Retry
+            </Button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      
+
       <main className="flex-1 p-8 overflow-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="font-mono font-bold text-3xl mb-2">
-            Welcome back, {user?.name || 'Developer'}
-          </h1>
-          <p className="text-muted-foreground">
-            Here are your personalized recommendations
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-mono font-bold text-3xl mb-2">
+                Welcome back, {user?.name || 'Developer'}
+              </h1>
+              <p className="text-muted-foreground">
+                Here are your personalized recommendations based on real GitHub data
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={refetch}
+              className="gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Refresh
+            </Button>
+          </div>
+        </div>
+
+        {/* API Rate Limit Status */}
+        <div className="brutal-card p-4 mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-accent flex items-center justify-center border-2 border-foreground">
+              <Zap className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="font-mono font-bold text-sm">GitHub API Status</p>
+              <p className="text-xs text-muted-foreground">
+                {rateLimit.remaining} / {rateLimit.limit} requests remaining
+              </p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-muted-foreground">
+              Resets: {new Date(rateLimit.reset * 1000).toLocaleTimeString()}
+            </p>
+          </div>
         </div>
 
         {/* Skills Summary */}
@@ -109,9 +149,9 @@ export default function Dashboard() {
             {preferences.frameworks.map(fw => (
               <SkillTag key={fw} label={fw} size="sm" />
             ))}
-            <SkillTag 
-              label={preferences.experienceLevel.charAt(0).toUpperCase() + preferences.experienceLevel.slice(1)} 
-              size="sm" 
+            <SkillTag
+              label={preferences.experienceLevel.charAt(0).toUpperCase() + preferences.experienceLevel.slice(1)}
+              size="sm"
             />
           </div>
         </div>
@@ -136,17 +176,22 @@ export default function Dashboard() {
               <div className="w-10 h-10 bg-primary flex items-center justify-center border-2 border-foreground">
                 <BookOpen className="w-5 h-5 text-primary-foreground" />
               </div>
-              <h2 className="font-mono font-bold text-xl">Top Repositories</h2>
+              <div>
+                <h2 className="font-mono font-bold text-xl">Top Repositories</h2>
+                <p className="text-xs text-muted-foreground">
+                  {filteredRepos.length} matches found
+                </p>
+              </div>
             </div>
             <div className="space-y-4">
               {filteredRepos.length > 0 ? (
-                filteredRepos.slice(0, 4).map(repo => (
+                filteredRepos.slice(0, 6).map(repo => (
                   <RepoCard key={repo.id} repository={repo} />
                 ))
               ) : (
                 <div className="brutal-card p-8 text-center">
                   <p className="font-mono text-muted-foreground">
-                    No repositories match your filters
+                    No repositories match your filters. Try adjusting your skills or filters.
                   </p>
                 </div>
               )}
@@ -159,17 +204,22 @@ export default function Dashboard() {
               <div className="w-10 h-10 bg-accent flex items-center justify-center border-2 border-foreground">
                 <Sparkles className="w-5 h-5" />
               </div>
-              <h2 className="font-mono font-bold text-xl">Recommended Issues</h2>
+              <div>
+                <h2 className="font-mono font-bold text-xl">Recommended Issues</h2>
+                <p className="text-xs text-muted-foreground">
+                  {filteredIssues.length} matches found
+                </p>
+              </div>
             </div>
             <div className="space-y-4">
               {filteredIssues.length > 0 ? (
-                filteredIssues.slice(0, 5).map(issue => (
+                filteredIssues.slice(0, 8).map(issue => (
                   <IssueCard key={issue.id} issue={issue} />
                 ))
               ) : (
                 <div className="brutal-card p-8 text-center">
                   <p className="font-mono text-muted-foreground">
-                    No issues match your filters
+                    No issues match your filters. Try different criteria.
                   </p>
                 </div>
               )}
