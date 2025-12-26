@@ -55,8 +55,11 @@ export function useAuth() {
   };
 
   const logout = () => {
+    console.log('Logging out user');
     setUser(null);
     localStorage.removeItem(STORAGE_KEY);
+    // Redirect to login page
+    window.location.href = '/login';
   };
 
   return {
