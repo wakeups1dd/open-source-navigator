@@ -129,14 +129,19 @@ The platform uses a sophisticated 5-factor scoring system:
 
 1. Push your code to GitHub
 2. Import project in Vercel
-3. Configure environment variables:
-   - `VITE_GITHUB_CLIENT_ID`
-   - `VITE_BACKEND_URL`
-4. Deploy
+3. Configure environment variables in Vercel Project Settings:
+   - `VITE_GITHUB_CLIENT_ID`: Your GitHub App Client ID
+   - `GITHUB_CLIENT_SECRET`: Your GitHub App Client Secret (Required for serverless function)
+   - `VITE_BACKEND_URL`: `https://your-project.vercel.app` (Your production URL)
+   - `VITE_APP_URL`: `https://your-project.vercel.app` (Your production URL)
+4. Update GitHub OAuth App Settings:
+   - **Homepage URL**: `https://your-project.vercel.app`
+   - **Authorization callback URL**: `https://your-project.vercel.app/api/auth/callback`
+5. Deploy
 
 ### Backend (Vercel Serverless)
 
-The backend can be deployed as Vercel Serverless Functions. Update your GitHub OAuth App callback URL to your production domain.
+The backend logic is automatically handled by Vercel Serverless Functions located in `api/`. No separate deployment is needed. Ensure `GITHUB_CLIENT_SECRET` is set in Vercel Environment Variables.
 
 ## 🤝 Contributing
 

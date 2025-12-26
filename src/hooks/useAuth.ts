@@ -33,12 +33,26 @@ export function useAuth() {
   const login = async () => {
     setIsLoading(true);
 
-    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID || 'Iv23liPsiwK9ZtFne8Hv';
-    const redirectUri = 'http://localhost:3001/auth/github/callback';
+    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
+    // Determine the redirect URI based on the current environment
+    // In production (Vercel), it should be the /api/auth/callback endpoint on the same domain
+    const baseUrl = window.location.origin;
+    // If running locally with separate backend, use localhost:3001, otherwise use the /api route
+    const isLocalDevelopment = baseUrl.includes('localhost:8080');
+    const redirectUri = isLocalDevelopment
+      ? 'http://localhost:3001/auth/github/callback'
+      : `${baseUrl}/api/auth/callback`;
+
     const scope = 'read:user user:email';
 
     console.log('GitHub OAuth - Client ID:', clientId);
     console.log('Redirect URI:', redirectUri);
+
+    if (!clientId) {
+      console.error('Missing VITE_GITHUB_CLIENT_ID');
+      setIsLoading(false);
+      return;
+    }
 
     // Redirect to GitHub OAuth
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
