@@ -52,12 +52,21 @@ export function Sidebar() {
               </li>
             );
           })}
+          <li>
+            <button
+              onClick={logout}
+              className="flex items-center gap-3 w-full px-4 py-3 font-mono font-bold text-sm uppercase bg-background border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))] hover:shadow-[3px_3px_0px_0px_hsl(var(--foreground))] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+          </li>
         </ul>
       </nav>
 
       {/* User section */}
       <div className="p-4 border-t-[3px] border-foreground">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3">
           {user?.avatar_url ? (
             <img
               src={user.avatar_url}
@@ -74,13 +83,6 @@ export function Sidebar() {
             <p className="text-xs text-muted-foreground truncate">@{user?.login || 'user'}</p>
           </div>
         </div>
-        <button
-          onClick={logout}
-          className="flex items-center justify-center gap-2 w-full px-4 py-2 font-mono font-bold text-sm uppercase bg-background border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_hsl(var(--foreground))] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150"
-        >
-          <LogOut className="w-4 h-4" />
-          Logout
-        </button>
       </div>
     </aside>
   );

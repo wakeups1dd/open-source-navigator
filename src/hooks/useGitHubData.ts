@@ -90,7 +90,7 @@ export function useRecommendations() {
                     language: lang,
                     minStars: 100,
                     maxStars: 50000,
-                    perPage: 10,
+                    perPage: 20,
                 })
             );
 
@@ -105,7 +105,7 @@ export function useRecommendations() {
                 githubService.searchIssues({
                     labels: issueLabels,
                     language: lang,
-                    perPage: 15,
+                    perPage: 30,
                 })
             );
 
@@ -133,8 +133,8 @@ export function useRecommendations() {
                 new Map(scoredIssues.map(i => [i.id, i])).values()
             );
 
-            setRepositories(matchingService.sortByScore(uniqueRepos, 30));
-            setIssues(matchingService.sortByScore(uniqueIssues, 25));
+            setRepositories(matchingService.sortByScore(uniqueRepos, 20));
+            setIssues(matchingService.sortByScore(uniqueIssues, 20));
         } catch (err) {
             setError(err as Error);
             setRepositories([]);

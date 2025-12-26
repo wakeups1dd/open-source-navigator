@@ -42,9 +42,13 @@ class MatchingService {
         if (itemLanguage && normalizedUserSkills.includes(itemLanguage.toLowerCase())) {
             score += 15;
             breakdown.push(`Language match: ${itemLanguage}`);
+        } else if (itemLanguage && normalizedUserSkills.some(s => itemLanguage.toLowerCase().includes(s))) {
+            // Partial language match (10 points) - e.g. "Typescript" vs "Javascript" or similar variations
+            score += 10;
+            breakdown.push(`Related language match: ${itemLanguage}`);
         }
 
-        // Topic/framework matches (up to 15 points)
+        // Topic/framework matches (up to 20 points for more optimum results)
         const topicMatches = itemTopics.filter(topic =>
             normalizedUserSkills.some(skill => topic.toLowerCase().includes(skill.toLowerCase()))
         );
@@ -382,7 +386,7 @@ class MatchingService {
     }
 
     // Sort and filter scored items
-    sortByScore<T extends { matchScore: MatchScore }>(items: T[], minScore: number = 30): T[] {
+    sortByScore<T extends { matchScore: MatchScore }>(items: T[], minScore: number = 20): T[] {
         return items
             .filter(item => item.matchScore.total >= minScore)
             .sort((a, b) => b.matchScore.total - a.matchScore.total);
