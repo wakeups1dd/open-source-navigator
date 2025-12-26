@@ -33,7 +33,7 @@ export function useAuth() {
   const login = async () => {
     setIsLoading(true);
 
-    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
+    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID || 'Iv23liPsiwK9ZtFne8Hv';
     // Determine the redirect URI based on the current environment
     // In production (Vercel), it should be the /api/auth/callback endpoint on the same domain
     const baseUrl = window.location.origin;

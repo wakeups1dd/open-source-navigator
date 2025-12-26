@@ -83,7 +83,10 @@ app.get('/auth/github/callback', async (req, res) => {
         res.redirect(frontendURL);
     } catch (error) {
         console.error('OAuth error:', error.response?.data || error.message);
-        res.redirect('http://localhost:8080/login?error=auth_failed');
+        const errorDetails = error.response?.data?.error_description || error.response?.data?.error || error.message;
+        // If it's an API call/browser directly viewing, helpful to see the error
+        // But strictly we should redirect to frontend with error param
+        res.redirect(`http://localhost:8080/login?error=auth_failed&details=${encodeURIComponent(errorDetails)}`);
     }
 });
 

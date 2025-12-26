@@ -89,7 +89,8 @@ export default async function handler(req, res) {
         res.redirect(frontendURL);
     } catch (error) {
         console.error('OAuth error:', error.response?.data || error.message);
+        const errorDetails = error.response?.data?.error_description || error.response?.data?.error || error.message;
         const frontendBaseUrl = process.env.VITE_APP_URL || `${protocol}://${host}`;
-        res.redirect(`${frontendBaseUrl}/login?error=auth_failed`);
+        res.redirect(`${frontendBaseUrl}/login?error=auth_failed&details=${encodeURIComponent(errorDetails)}`);
     }
 }
