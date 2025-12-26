@@ -45,8 +45,15 @@ export default function Onboarding() {
   };
 
   const handleComplete = () => {
+    console.log('Completing onboarding...');
+    console.log('Current preferences before:', preferences);
     completeOnboarding();
-    navigate('/dashboard');
+
+    // Wait a bit to ensure state is saved to localStorage
+    setTimeout(() => {
+      console.log('Navigating to dashboard');
+      navigate('/dashboard');
+    }, 100);
   };
 
   const canProceed = () => {

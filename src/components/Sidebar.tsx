@@ -20,7 +20,8 @@ export function Sidebar() {
           <div className="w-10 h-10 bg-primary flex items-center justify-center border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))]">
             <Compass className="w-6 h-6 text-primary-foreground" />
           </div>
-          <span className="font-mono font-bold text-lg">OpenSource</span>
+          <span className="font-mono font-bold text-lg">Compass
+          </span>
         </Link>
       </div>
 
@@ -30,7 +31,7 @@ export function Sidebar() {
           {navItems.map(item => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
-            
+
             return (
               <li key={item.path}>
                 <Link

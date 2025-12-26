@@ -1,0 +1,17 @@
+{
+    "name": "opensource-compass-server",
+    "version": "1.0.0",
+    "description": "Backend server for GitHub OAuth authentication",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "node index.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "axios": "^1.6.2"
+    }
+}

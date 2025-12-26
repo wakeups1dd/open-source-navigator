@@ -6,6 +6,10 @@ interface User {
   name: string;
   avatar_url: string;
   email: string | null;
+  bio?: string | null;
+  public_repos?: number;
+  followers?: number;
+  following?: number;
 }
 
 const STORAGE_KEY = 'opensource-compass-user';
@@ -25,25 +29,29 @@ export function useAuth() {
     }
   }, [user]);
 
-  // Mock GitHub login for demo purposes
+  // GitHub OAuth login
   const login = async () => {
     setIsLoading(true);
-    
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock user data
-    const mockUser: User = {
-      id: '12345',
-      login: 'developer',
-      name: 'Developer',
-      avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=developer',
-      email: 'developer@example.com',
-    };
-    
-    setUser(mockUser);
+
+    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID || 'Iv23liPsiwK9ZtFne8Hv';
+    const redirectUri = 'http://localhost:3001/auth/github/callback';
+    const scope = 'read:user user:email';
+
+    console.log('GitHub OAuth - Client ID:', clientId);
+    console.log('Redirect URI:', redirectUri);
+
+    // Redirect to GitHub OAuth
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
+
+    console.log('Redirecting to:', githubAuthUrl);
+    window.location.href = githubAuthUrl;
+  };
+
+  // Handle OAuth callback
+  const handleCallback = (userData: User) => {
+    console.log('Setting user data:', userData);
+    setUser(userData);
     setIsLoading(false);
-    return mockUser;
   };
 
   const logout = () => {
@@ -57,5 +65,6 @@ export function useAuth() {
     isAuthenticated: !!user,
     login,
     logout,
+    handleCallback,
   };
 }

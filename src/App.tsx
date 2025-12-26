@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import Repository from "./pages/Repository";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import AuthCallback from "./pages/AuthCallback";
 
 const queryClient = new QueryClient();
 
@@ -18,14 +19,21 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   const { preferences } = useUserPreferences();
 
+  console.log('ProtectedRoute - isAuthenticated:', isAuthenticated);
+  console.log('ProtectedRoute - isOnboarded:', preferences.isOnboarded);
+  console.log('ProtectedRoute - preferences:', preferences);
+
   if (!isAuthenticated) {
+    console.log('Not authenticated, redirecting to login');
     return <Navigate to="/login" replace />;
   }
 
   if (!preferences.isOnboarded) {
+    console.log('Not onboarded, redirecting to onboarding');
     return <Navigate to="/onboarding" replace />;
   }
 
+  console.log('Authenticated and onboarded, showing protected content');
   return <>{children}</>;
 }
 
@@ -64,6 +72,7 @@ const AppRoutes = () => (
         </PublicRoute>
       }
     />
+    <Route path="/auth/callback" element={<AuthCallback />} />
     <Route
       path="/onboarding"
       element={

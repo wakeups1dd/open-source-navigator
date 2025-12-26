@@ -33,7 +33,12 @@ export function useUserPreferences() {
   };
 
   const completeOnboarding = () => {
-    setPreferences(prev => ({ ...prev, isOnboarded: true }));
+    console.log('Setting isOnboarded to true');
+    setPreferences(prev => {
+      const updated = { ...prev, isOnboarded: true };
+      console.log('Updated preferences:', updated);
+      return updated;
+    });
   };
 
   const resetPreferences = () => {
