@@ -56,7 +56,13 @@ app.get('/auth/github/callback', async (req, res) => {
             console.error('Token exchange failed:', tokenResponse.data);
             return res.status(400).json({
                 error: 'Failed to get access token',
-                details: tokenResponse.data
+                received_data: tokenResponse.data,
+                debug_info: {
+                    has_client_id: !!GITHUB_CLIENT_ID,
+                    has_client_secret: !!GITHUB_CLIENT_SECRET,
+                    redirect_uri_used: REDIRECT_URI,
+                    code_received: !!code
+                }
             });
         }
 
