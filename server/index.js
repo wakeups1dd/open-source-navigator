@@ -53,7 +53,11 @@ app.get('/auth/github/callback', async (req, res) => {
         const accessToken = tokenResponse.data.access_token;
 
         if (!accessToken) {
-            return res.status(400).json({ error: 'Failed to get access token' });
+            console.error('Token exchange failed:', tokenResponse.data);
+            return res.status(400).json({
+                error: 'Failed to get access token',
+                details: tokenResponse.data
+            });
         }
 
         // Get user data from GitHub

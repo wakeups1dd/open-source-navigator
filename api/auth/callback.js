@@ -55,7 +55,10 @@ export default async function handler(req, res) {
 
         if (!accessToken) {
             console.error('Token exchange failed:', tokenResponse.data);
-            return res.status(400).json({ error: 'Failed to get access token' });
+            return res.status(400).json({
+                error: 'Failed to get access token',
+                details: tokenResponse.data
+            });
         }
 
         // Get user data from GitHub
