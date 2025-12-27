@@ -29,7 +29,7 @@ const difficultyColors = {
 
 export function IssueCard({ issue }: IssueCardProps) {
   return (
-    <div className="brutal-card p-5 animate-fade-in">
+    <div className="brutal-card p-4 sm:p-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
         <div className="flex-1 min-w-0 w-full">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -41,7 +41,7 @@ export function IssueCard({ issue }: IssueCardProps) {
               #{issue.number}
             </span>
           </div>
-          <h3 className="font-mono font-bold text-base leading-tight line-clamp-2">
+          <h3 className="font-mono font-bold text-sm sm:text-base leading-tight line-clamp-2 break-words">
             {issue.title}
           </h3>
         </div>

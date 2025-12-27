@@ -19,22 +19,22 @@ function formatNumber(num: number): string {
 
 export function RepoCard({ repository }: RepoCardProps) {
   return (
-    <div className="brutal-card p-6 animate-fade-in">
+    <div className="brutal-card p-4 sm:p-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
-        <div className="flex items-center gap-4 flex-1 min-w-0 w-full">
+        <div className="flex items-center gap-4 flex-1 min-w-0">
           <img
             src={repository.owner.avatar_url}
             alt={repository.owner.login}
-            className="w-12 h-12 border-2 border-foreground shrink-0"
+            className="w-10 h-10 sm:w-12 sm:h-12 border-2 border-foreground shrink-0"
           />
           <div className="min-w-0 flex-1">
             <Link
               to={`/repository/${repository.id}`}
-              className="font-mono font-bold text-lg hover:text-primary transition-colors truncate block"
+              className="font-mono font-bold text-base sm:text-lg hover:text-primary transition-colors truncate block"
             >
               {repository.full_name}
             </Link>
-            <p className="text-muted-foreground text-sm line-clamp-2 mt-1">
+            <p className="text-muted-foreground text-xs sm:text-sm line-clamp-2 mt-1 break-words">
               {repository.description}
             </p>
           </div>
