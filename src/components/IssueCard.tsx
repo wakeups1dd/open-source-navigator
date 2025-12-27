@@ -29,7 +29,7 @@ const difficultyColors = {
 
 export function IssueCard({ issue }: IssueCardProps) {
   return (
-    <div className="brutal-card w-full max-w-full p-3 sm:p-5 animate-fade-in sm:border-[3px] sm:shadow-[4px_4px_0px_0px_hsl(var(--foreground))] border-2 shadow-[2px_2px_0px_0px_hsl(var(--foreground))]">
+    <div className="brutal-card w-full max-w-full p-3 sm:p-5 animate-fade-in">
       <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
         <div className="flex-1 min-w-0 w-full">
           <div className="flex items-center gap-2 mb-2 flex-wrap">

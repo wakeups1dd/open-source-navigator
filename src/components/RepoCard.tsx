@@ -19,7 +19,7 @@ function formatNumber(num: number): string {
 
 export function RepoCard({ repository }: RepoCardProps) {
   return (
-    <div className="brutal-card w-full max-w-full p-3 sm:p-6 animate-fade-in sm:border-[3px] sm:shadow-[4px_4px_0px_0px_hsl(var(--foreground))] border-2 shadow-[2px_2px_0px_0px_hsl(var(--foreground))]">
+    <div className="brutal-card w-full max-w-full p-3 sm:p-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
         <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
           <img
