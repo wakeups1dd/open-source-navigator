@@ -69,15 +69,15 @@ export default function Dashboard() {
     return (
       <div className="flex min-h-screen bg-background">
         <Sidebar />
-        <main className="flex-1 p-8 flex items-center justify-center">
-          <div className="brutal-card p-8 max-w-md text-center">
-            <AlertCircle className="w-12 h-12 mx-auto mb-4 text-destructive" />
-            <h2 className="font-mono font-bold text-xl mb-2">Failed to Load Data</h2>
-            <p className="text-muted-foreground mb-4">
+        <main className="flex-1 p-4 lg:p-8 flex items-center justify-center">
+          <div className="brutal-card p-4 sm:p-8 max-w-md text-center w-full">
+            <AlertCircle className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4 text-destructive" />
+            <h2 className="font-mono font-bold text-lg sm:text-xl mb-2">Failed to Load Data</h2>
+            <p className="text-muted-foreground text-sm mb-4">
               {error.message || 'Unable to fetch GitHub data. Please try again.'}
             </p>
-            <Button onClick={refetch}>
-              <RefreshCw className="w-4 h-4" />
+            <Button onClick={refetch} className="w-full sm:w-auto">
+              <RefreshCw className="w-4 h-4 mr-2" />
               Retry
             </Button>
           </div>
@@ -90,15 +90,16 @@ export default function Dashboard() {
     <div className="flex min-h-screen bg-background flex-col lg:flex-row">
       <Sidebar />
 
-      <main className="flex-1 p-4 lg:p-8 overflow-auto">
+      <main className="flex-1 p-3 sm:p-4 lg:p-8 overflow-x-hidden">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col gap-4">
             <div>
-              <h1 className="font-mono font-bold text-2xl lg:text-3xl mb-2">
-                Welcome back, {user?.name || 'Developer'}
+              <h1 className="font-mono font-bold text-xl sm:text-2xl lg:text-3xl mb-2 leading-tight">
+                Welcome back, <br className="sm:hidden" />
+                {user?.name || 'Developer'}
               </h1>
-              <p className="text-muted-foreground text-sm lg:text-base">
+              <p className="text-muted-foreground text-xs sm:text-sm lg:text-base">
                 Here are your personalized recommendations based on real GitHub data
               </p>
             </div>
@@ -106,7 +107,7 @@ export default function Dashboard() {
               variant="outline"
               size="sm"
               onClick={refetch}
-              className="gap-2 w-full sm:w-auto"
+              className="gap-2 w-full sm:w-auto self-start"
             >
               <RefreshCw className="w-4 h-4" />
               Refresh
@@ -115,9 +116,9 @@ export default function Dashboard() {
         </div>
 
         {/* API Rate Limit Status */}
-        <div className="brutal-card p-4 mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-accent flex items-center justify-center border-2 border-foreground">
+        <div className="brutal-card p-3 sm:p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 w-full">
+            <div className="w-8 h-8 bg-accent flex items-center justify-center border-2 border-foreground shrink-0">
               <Zap className="w-4 h-4" />
             </div>
             <div>
@@ -127,7 +128,7 @@ export default function Dashboard() {
               </p>
             </div>
           </div>
-          <div className="text-right">
+          <div className="text-left sm:text-right w-full sm:w-auto pl-11 sm:pl-0">
             <p className="text-xs text-muted-foreground">
               Resets: {new Date(rateLimit.reset * 1000).toLocaleTimeString()}
             </p>
@@ -135,12 +136,12 @@ export default function Dashboard() {
         </div>
 
         {/* Skills Summary */}
-        <div className="brutal-card p-6 mb-8">
+        <div className="brutal-card p-3 sm:p-6 mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-secondary flex items-center justify-center border-2 border-foreground">
-              <Target className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-secondary flex items-center justify-center border-2 border-foreground shrink-0">
+              <Target className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <h2 className="font-mono font-bold text-lg">Your Skills</h2>
+            <h2 className="font-mono font-bold text-base sm:text-lg">Your Skills</h2>
           </div>
           <div className="flex flex-wrap gap-2">
             {preferences.languages.map(lang => (
@@ -157,7 +158,7 @@ export default function Dashboard() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-8">
+        <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
           {(['all', 'beginner', 'gsoc', 'hacktoberfest'] as FilterMode[]).map(mode => (
             <FilterButton
               key={mode}
@@ -169,15 +170,15 @@ export default function Dashboard() {
         </div>
 
         {/* Main content grid */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Repositories */}
           <section>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-primary flex items-center justify-center border-2 border-foreground">
-                <BookOpen className="w-5 h-5 text-primary-foreground" />
+            <div className="flex items-center gap-3 mb-4 sm:mb-6">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary flex items-center justify-center border-2 border-foreground shrink-0">
+                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
               </div>
               <div>
-                <h2 className="font-mono font-bold text-xl">Top Repositories</h2>
+                <h2 className="font-mono font-bold text-lg sm:text-xl">Top Repositories</h2>
                 <p className="text-xs text-muted-foreground">
                   {filteredRepos.length} matches found
                 </p>
@@ -189,8 +190,8 @@ export default function Dashboard() {
                   <RepoCard key={repo.id} repository={repo} />
                 ))
               ) : (
-                <div className="brutal-card p-8 text-center">
-                  <p className="font-mono text-muted-foreground">
+                <div className="brutal-card p-6 sm:p-8 text-center">
+                  <p className="font-mono text-muted-foreground text-sm">
                     No repositories match your filters. Try adjusting your skills or filters.
                   </p>
                 </div>
@@ -200,12 +201,12 @@ export default function Dashboard() {
 
           {/* Issues */}
           <section>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-accent flex items-center justify-center border-2 border-foreground">
-                <Sparkles className="w-5 h-5" />
+            <div className="flex items-center gap-3 mb-4 sm:mb-6">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-accent flex items-center justify-center border-2 border-foreground shrink-0">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <div>
-                <h2 className="font-mono font-bold text-xl">Recommended Issues</h2>
+                <h2 className="font-mono font-bold text-lg sm:text-xl">Recommended Issues</h2>
                 <p className="text-xs text-muted-foreground">
                   {filteredIssues.length} matches found
                 </p>
@@ -217,8 +218,8 @@ export default function Dashboard() {
                   <IssueCard key={issue.id} issue={issue} />
                 ))
               ) : (
-                <div className="brutal-card p-8 text-center">
-                  <p className="font-mono text-muted-foreground">
+                <div className="brutal-card p-6 sm:p-8 text-center">
+                  <p className="font-mono text-muted-foreground text-sm">
                     No issues match your filters. Try different criteria.
                   </p>
                 </div>

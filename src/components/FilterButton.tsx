@@ -40,8 +40,8 @@ export function FilterButton({ mode, currentMode, onClick }: FilterButtonProps) 
     <button
       onClick={() => onClick(mode)}
       className={cn(
-        'flex items-center gap-2 px-4 py-3 font-mono font-bold text-sm uppercase',
-        'border-[3px] border-foreground transition-all duration-150',
+        'flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-3 font-mono font-bold text-xs sm:text-sm uppercase',
+        'border-2 sm:border-[3px] border-foreground transition-all duration-150',
         'hover:-translate-x-0.5 hover:-translate-y-0.5',
         'active:translate-x-1 active:translate-y-1 active:shadow-none',
         isActive
