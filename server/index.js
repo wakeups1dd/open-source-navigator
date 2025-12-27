@@ -2,11 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from 'axios';
+import { PrismaClient } from '@prisma/client';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const prisma = new PrismaClient();
 
 // Middleware
 app.use(cors({
@@ -57,12 +59,6 @@ app.get('/auth/github/callback', async (req, res) => {
             return res.status(400).json({
                 error: 'Failed to get access token',
                 received_data: tokenResponse.data,
-                debug_info: {
-                    has_client_id: !!GITHUB_CLIENT_ID,
-                    has_client_secret: !!GITHUB_CLIENT_SECRET,
-                    redirect_uri_used: REDIRECT_URI,
-                    code_received: !!code
-                }
             });
         }
 
@@ -75,7 +71,22 @@ app.get('/auth/github/callback', async (req, res) => {
 
         const userData = userResponse.data;
 
+        // Upsert user in database
+        const user = await prisma.user.upsert({
+            where: { githubId: userData.id.toString() },
+            update: {
+                username: userData.login,
+                // We don't overwrite preferences here to preserve user settings
+            },
+            create: {
+                githubId: userData.id.toString(),
+                username: userData.login,
+                preferences: '{}', // Default empty preferences
+            },
+        });
+
         // Redirect back to frontend with user data
+        // We can pass the database ID or just stick with GitHub ID for now
         const frontendURL = `http://localhost:8080/auth/callback?user=${encodeURIComponent(
             JSON.stringify({
                 id: userData.id.toString(),
@@ -87,6 +98,7 @@ app.get('/auth/github/callback', async (req, res) => {
                 public_repos: userData.public_repos,
                 followers: userData.followers,
                 following: userData.following,
+                dbUser: user, // Pass DB user object too if needed
             })
         )}`;
 
@@ -94,9 +106,48 @@ app.get('/auth/github/callback', async (req, res) => {
     } catch (error) {
         console.error('OAuth error:', error.response?.data || error.message);
         const errorDetails = error.response?.data?.error_description || error.response?.data?.error || error.message;
-        // If it's an API call/browser directly viewing, helpful to see the error
-        // But strictly we should redirect to frontend with error param
         res.redirect(`http://localhost:8080/login?error=auth_failed&details=${encodeURIComponent(errorDetails)}`);
+    }
+});
+
+// User Preferences Endpoints
+
+// Get user preferences
+app.get('/api/user/:githubId/preferences', async (req, res) => {
+    try {
+        const { githubId } = req.params;
+        const user = await prisma.user.findUnique({
+            where: { githubId },
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json(JSON.parse(user.preferences));
+    } catch (error) {
+        console.error('Error fetching preferences:', error);
+        res.status(500).json({ error: 'Failed to fetch preferences' });
+    }
+});
+
+// Update user preferences
+app.put('/api/user/:githubId/preferences', async (req, res) => {
+    try {
+        const { githubId } = req.params;
+        const preferences = req.body;
+
+        const user = await prisma.user.update({
+            where: { githubId },
+            data: {
+                preferences: JSON.stringify(preferences),
+            },
+        });
+
+        res.json(JSON.parse(user.preferences));
+    } catch (error) {
+        console.error('Error updating preferences:', error);
+        res.status(500).json({ error: 'Failed to update preferences' });
     }
 });
 
