@@ -20,12 +20,12 @@ function formatNumber(num: number): string {
 export function RepoCard({ repository }: RepoCardProps) {
   return (
     <div className="brutal-card p-6 animate-fade-in">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-4 flex-1 min-w-0">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+        <div className="flex items-center gap-4 flex-1 min-w-0 w-full">
           <img
             src={repository.owner.avatar_url}
             alt={repository.owner.login}
-            className="w-12 h-12 border-2 border-foreground"
+            className="w-12 h-12 border-2 border-foreground shrink-0"
           />
           <div className="min-w-0 flex-1">
             <Link
@@ -39,28 +39,30 @@ export function RepoCard({ repository }: RepoCardProps) {
             </p>
           </div>
         </div>
-        {'matchScore' in repository ? (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <div className="flex items-center gap-2">
-                  <ScoreBadge score={Math.round(repository.matchScore.total)} />
-                  <Info className="w-4 h-4 text-muted-foreground" />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent className="max-w-xs">
-                <div className="space-y-1 text-xs">
-                  <p className="font-bold">Match Breakdown:</p>
-                  {repository.matchScore.breakdown.map((reason, i) => (
-                    <p key={i}>• {reason}</p>
-                  ))}
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        ) : (
-          <ScoreBadge score={repository.contributionScore || 50} />
-        )}
+        <div className="self-end sm:self-auto">
+          {'matchScore' in repository ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center gap-2">
+                    <ScoreBadge score={Math.round(repository.matchScore.total)} />
+                    <Info className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <div className="space-y-1 text-xs">
+                    <p className="font-bold">Match Breakdown:</p>
+                    {repository.matchScore.breakdown.map((reason, i) => (
+                      <p key={i}>• {reason}</p>
+                    ))}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <ScoreBadge score={repository.contributionScore || 50} />
+          )}
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2 mt-4">
@@ -72,7 +74,7 @@ export function RepoCard({ repository }: RepoCardProps) {
         ))}
       </div>
 
-      <div className="flex items-center gap-6 mt-4 text-sm font-mono">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-4 text-sm font-mono">
         <div className="flex items-center gap-1.5">
           <Star className="w-4 h-4" />
           <span className="font-bold">{formatNumber(repository.stargazers_count)}</span>

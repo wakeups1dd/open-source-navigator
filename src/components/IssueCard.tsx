@@ -30,13 +30,13 @@ const difficultyColors = {
 export function IssueCard({ issue }: IssueCardProps) {
   return (
     <div className="brutal-card p-5 animate-fade-in">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
+        <div className="flex-1 min-w-0 w-full">
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
             <span className="text-xs font-mono text-muted-foreground">
               {issue.repository.full_name}
             </span>
-            <span className="text-muted-foreground">•</span>
+            <span className="text-muted-foreground hidden sm:inline">•</span>
             <span className="text-xs font-mono text-muted-foreground">
               #{issue.number}
             </span>
@@ -47,7 +47,7 @@ export function IssueCard({ issue }: IssueCardProps) {
         </div>
         <div
           className={cn(
-            'px-3 py-1 font-mono font-bold text-xs uppercase border-2 border-foreground',
+            'px-3 py-1 font-mono font-bold text-xs uppercase border-2 border-foreground self-start sm:self-auto shrink-0',
             difficultyColors[issue.difficulty]
           )}
         >
@@ -77,8 +77,8 @@ export function IssueCard({ issue }: IssueCardProps) {
         ))}
       </div>
 
-      <div className="flex items-center justify-between mt-4 pt-3 border-t-2 border-foreground">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 pt-3 border-t-2 border-foreground gap-3">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
             <Clock className="w-3 h-3" />
             {formatTimeAgo(issue.created_at)}
@@ -108,7 +108,7 @@ export function IssueCard({ issue }: IssueCardProps) {
           href={issue.html_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-3 py-1.5 font-mono font-bold text-xs uppercase bg-background border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_hsl(var(--foreground))] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150"
+          className="flex items-center justify-center gap-2 px-3 py-1.5 font-mono font-bold text-xs uppercase bg-background border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_hsl(var(--foreground))] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 w-full sm:w-auto"
         >
           Open Issue
           <ExternalLink className="w-3 h-3" />
