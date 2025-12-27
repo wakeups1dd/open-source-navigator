@@ -21,7 +21,7 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left side - Hero */}
-      <div className="flex-1 p-8 lg:p-16 flex flex-col justify-center">
+      <div className="flex-1 p-4 md:p-8 lg:p-16 flex flex-col justify-center">
         <div className="max-w-xl">
           {/* Logo */}
           <div className="flex items-center gap-4 mb-12">
@@ -43,7 +43,7 @@ export default function Login() {
           </h2>
 
           <p className="text-lg text-muted-foreground mb-10 max-w-md">
-            Discover GitHub repositories and issues tailored to your skills. 
+            Discover GitHub repositories and issues tailored to your skills.
             Start contributing to open source today.
           </p>
 
@@ -83,7 +83,7 @@ export default function Login() {
         <div className="absolute top-8 right-8 w-24 h-24 bg-secondary border-[3px] border-foreground shadow-[4px_4px_0px_0px_hsl(var(--foreground))]" />
         <div className="absolute bottom-16 left-8 w-16 h-16 bg-accent border-[3px] border-foreground shadow-[4px_4px_0px_0px_hsl(var(--foreground))]" />
         <div className="absolute top-1/3 left-16 w-8 h-8 bg-background border-2 border-foreground" />
-        
+
         {/* Main content */}
         <div className="relative z-10 text-center">
           <div className="grid grid-cols-2 gap-4 mb-8">

@@ -1,27 +1,29 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Compass, LayoutDashboard, Settings, LogOut, User } from 'lucide-react';
+import { Compass, LayoutDashboard, Settings, LogOut, User, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
-export function Sidebar() {
+function SidebarContent({ className }: { className?: string }) {
   const location = useLocation();
   const { user, logout } = useAuth();
 
   return (
-    <aside className="w-64 min-h-screen bg-card border-r-[3px] border-foreground flex flex-col">
+    <div className={cn("flex flex-col h-full", className)}>
       {/* Logo */}
       <div className="p-6 border-b-[3px] border-foreground">
         <Link to="/dashboard" className="flex items-center gap-3">
           <div className="w-10 h-10 bg-primary flex items-center justify-center border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))]">
             <Compass className="w-6 h-6 text-primary-foreground" />
           </div>
-          <span className="font-mono font-bold text-lg">Compass
-          </span>
+          <span className="font-mono font-bold text-lg">Compass</span>
         </Link>
       </div>
 
@@ -65,7 +67,7 @@ export function Sidebar() {
       </nav>
 
       {/* User section */}
-      <div className="p-4 border-t-[3px] border-foreground">
+      <div className="p-4 border-t-[3px] border-foreground mt-auto">
         <div className="flex items-center gap-3">
           {user?.avatar_url ? (
             <img
@@ -84,6 +86,41 @@ export function Sidebar() {
           </div>
         </div>
       </div>
-    </aside>
+    </div>
+  );
+}
+
+export function Sidebar() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex w-64 min-h-screen bg-card border-r-[3px] border-foreground flex-col">
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile Sidebar Trigger */}
+      <div className="lg:hidden p-4 border-b-[3px] border-foreground bg-background flex items-center justify-between sticky top-0 z-50">
+        <Link to="/dashboard" className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-primary flex items-center justify-center border-2 border-foreground">
+            <Compass className="w-4 h-4 text-primary-foreground" />
+          </div>
+          <span className="font-mono font-bold text-lg">Compass</span>
+        </Link>
+
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))]">
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 border-r-[3px] border-foreground w-72">
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
+      </div>
+    </>
   );
 }

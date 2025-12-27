@@ -87,12 +87,12 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background flex-col lg:flex-row">
       <Sidebar />
 
-      <main className="flex-1 p-8 overflow-auto">
+      <main className="flex-1 p-4 lg:p-8 overflow-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 hidden lg:block">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="font-mono font-bold text-3xl mb-2">

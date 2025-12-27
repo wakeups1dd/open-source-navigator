@@ -17,7 +17,7 @@ function formatNumber(num: number): string {
 export default function Repository() {
   const { id } = useParams();
   const repository = mockRepositories.find(r => r.id === Number(id));
-  const repoIssues = mockIssues.filter(i => 
+  const repoIssues = mockIssues.filter(i =>
     i.repository.full_name === repository?.full_name
   );
 
@@ -41,10 +41,10 @@ export default function Repository() {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background flex-col lg:flex-row">
       <Sidebar />
-      
-      <main className="flex-1 p-8 overflow-auto">
+
+      <main className="flex-1 p-4 lg:p-8 overflow-auto">
         {/* Back button */}
         <Link
           to="/dashboard"
