@@ -3,9 +3,10 @@ import { cn } from '@/lib/utils';
 interface ScoreBadgeProps {
   score: number;
   size?: 'sm' | 'md' | 'lg';
+  className?: string;
 }
 
-export function ScoreBadge({ score, size = 'md' }: ScoreBadgeProps) {
+export function ScoreBadge({ score, size = 'md', className }: ScoreBadgeProps) {
   const sizeClasses = {
     sm: 'w-10 h-10 text-sm',
     md: 'w-14 h-14 text-lg',
@@ -24,7 +25,8 @@ export function ScoreBadge({ score, size = 'md' }: ScoreBadgeProps) {
         'flex items-center justify-center font-mono font-bold border-[3px] border-foreground',
         'shadow-[3px_3px_0px_0px_hsl(var(--foreground))]',
         sizeClasses[size],
-        getScoreColor(score)
+        getScoreColor(score),
+        className
       )}
     >
       {score}

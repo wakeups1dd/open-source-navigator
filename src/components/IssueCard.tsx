@@ -29,7 +29,7 @@ const difficultyColors = {
 
 export function IssueCard({ issue }: IssueCardProps) {
   return (
-    <div className="brutal-card p-4 sm:p-5 animate-fade-in">
+    <div className="brutal-card p-3 sm:p-5 animate-fade-in sm:border-[3px] sm:shadow-[4px_4px_0px_0px_hsl(var(--foreground))] border-2 shadow-[2px_2px_0px_0px_hsl(var(--foreground))]">
       <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
         <div className="flex-1 min-w-0 w-full">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -47,7 +47,7 @@ export function IssueCard({ issue }: IssueCardProps) {
         </div>
         <div
           className={cn(
-            'px-3 py-1 font-mono font-bold text-xs uppercase border-2 border-foreground self-start sm:self-auto shrink-0',
+            'px-2 sm:px-3 py-1 font-mono font-bold text-[10px] sm:text-xs uppercase border-2 border-foreground self-start sm:self-auto shrink-0',
             difficultyColors[issue.difficulty]
           )}
         >
@@ -55,7 +55,7 @@ export function IssueCard({ issue }: IssueCardProps) {
         </div>
       </div>
 
-      <p className="mt-3 text-sm text-muted-foreground line-clamp-2">
+      <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-muted-foreground line-clamp-2">
         {issue.explanation}
       </p>
 
@@ -69,7 +69,7 @@ export function IssueCard({ issue }: IssueCardProps) {
         {issue.labels.map(label => (
           <span
             key={label.id}
-            className="px-2 py-0.5 text-xs font-mono font-bold border border-foreground"
+            className="px-2 py-0.5 text-[10px] sm:text-xs font-mono font-bold border border-foreground"
             style={{ backgroundColor: `#${label.color}20` }}
           >
             {label.name}
@@ -77,7 +77,7 @@ export function IssueCard({ issue }: IssueCardProps) {
         ))}
       </div>
 
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 pt-3 border-t-2 border-foreground gap-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-3 sm:mt-4 pt-3 border-t-2 border-foreground gap-3">
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
             <Clock className="w-3 h-3" />
@@ -108,7 +108,7 @@ export function IssueCard({ issue }: IssueCardProps) {
           href={issue.html_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 px-3 py-1.5 font-mono font-bold text-xs uppercase bg-background border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_hsl(var(--foreground))] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150 w-full sm:w-auto"
+          className="flex items-center justify-center gap-2 px-3 py-1.5 font-mono font-bold text-xs uppercase bg-background border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))] hover:shadow-[3px_3px_0px_0px_hsl(var(--foreground))] transition-all duration-150 active:translate-x-0.5 active:translate-y-0.5 w-full sm:w-auto"
         >
           Open Issue
           <ExternalLink className="w-3 h-3" />

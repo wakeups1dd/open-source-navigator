@@ -23,4 +23,3 @@ OpenSource Compass uses real GitHub API data and an intelligent matching algorit
 - **API**: GitHub REST API v3
 - **State Management**: React Hooks + localStorage caching
 - **Routing**: React Router v6
-
