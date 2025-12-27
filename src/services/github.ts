@@ -240,6 +240,22 @@ class GitHubService {
         }
     }
 
+    async getRepositoryById(id: number): Promise<GitHubRepository | null> {
+        const cacheKey = `repo-id-${id}`;
+        const cached = cache.get<GitHubRepository>(cacheKey);
+        if (cached) return cached;
+
+        try {
+            const response = await this.api.get(`/repositories/${id}`);
+            const repository = response.data;
+            cache.set(cacheKey, repository, 360); // Cache for 6 hours
+            return repository;
+        } catch (error) {
+            console.error(`Failed to fetch repository ${id}:`, error);
+            return null;
+        }
+    }
+
     async getRepositoryIssues(
         owner: string,
         repo: string,

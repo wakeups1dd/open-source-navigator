@@ -177,3 +177,58 @@ export function useRateLimit() {
 
     return { rateLimit, loading, refetch: fetchRateLimit };
 }
+
+export function useRepository(id: string | undefined) {
+    const { preferences } = useUserPreferences();
+    const [repository, setRepository] = useState<ScoredRepository | null>(null);
+    const [issues, setIssues] = useState<ScoredIssue[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
+
+    const fetchData = useCallback(async () => {
+        if (!id) return;
+
+        setLoading(true);
+        setError(null);
+
+        try {
+            // Fetch repository details
+            const repoData = await githubService.getRepositoryById(Number(id));
+
+            if (!repoData) {
+                throw new Error('Repository not found');
+            }
+
+            // Fetch recent issues for this repo
+            // We need to use the owner/repo name for the issues endpoint
+            const issueData = await githubService.getRepositoryIssues(
+                repoData.owner.login,
+                repoData.name
+            );
+
+            // Score the repository and issues
+            const scoredRepo = matchingService.scoreRepository(repoData, preferences);
+            const scoredIssues = issueData.map(issue =>
+                matchingService.scoreIssue(issue, preferences)
+            );
+
+            setRepository(scoredRepo);
+
+            // Sort issues by match score
+            setIssues(matchingService.sortByScore(scoredIssues, 10));
+
+        } catch (err) {
+            setError(err as Error);
+            setRepository(null);
+            setIssues([]);
+        } finally {
+            setLoading(false);
+        }
+    }, [id, preferences]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    return { repository, issues, loading, error, refetch: fetchData };
+}
