@@ -87,10 +87,10 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex min-h-screen bg-background flex-col lg:flex-row">
+    <div className="flex min-h-screen bg-background flex-col lg:flex-row overflow-x-hidden w-full">
       <Sidebar />
 
-      <main className="flex-1 p-3 sm:p-4 lg:p-8 overflow-x-hidden">
+      <main className="flex-1 w-full min-w-0 p-3 sm:p-4 lg:p-8">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <div className="flex flex-col gap-4">
