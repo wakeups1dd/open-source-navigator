@@ -89,11 +89,7 @@ export default function Repository() {
                     {repository.description || 'No description provided.'}
                   </p>
                 </div>
-                {'matchScore' in repository ? (
-                  <ScoreBadge score={Math.round(repository.matchScore.total)} size="lg" className="shrink-0" />
-                ) : (
-                  <ScoreBadge score={repository.contributionScore || 50} size="lg" className="shrink-0" />
-                )}
+                <ScoreBadge score={Math.round(repository.matchScore.total)} size="lg" className="shrink-0" />
               </div>
 
               <div className="flex flex-wrap gap-2 mt-4 sm:mt-6">
@@ -149,29 +145,27 @@ export default function Repository() {
         </div>
 
         {/* Score Breakdown - Only if we have it */}
-        {'matchScore' in repository && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {[
-              { label: 'Skill Match', value: repository.matchScore.skillMatch > 20 ? 'High' : 'Medium', icon: FileText },
-              { label: 'Popularity', value: repository.matchScore.popularityScore > 5 ? 'High' : 'Medium', icon: Users },
-              { label: 'Difficulty', value: 'Appropriate', icon: AlertCircle },
-              { label: 'Activity', value: repository.matchScore.activityScore > 5 ? 'Recent' : 'Low', icon: Clock },
-            ].map(item => {
-              const Icon = item.icon;
-              return (
-                <div key={item.label} className="brutal-card p-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-muted flex items-center justify-center border-2 border-foreground">
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <span className="font-mono text-sm text-muted-foreground">{item.label}</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: 'Skill Match', value: repository.matchScore.skillMatch > 20 ? 'High' : 'Medium', icon: FileText },
+            { label: 'Popularity', value: repository.matchScore.popularityScore > 5 ? 'High' : 'Medium', icon: Users },
+            { label: 'Difficulty', value: 'Appropriate', icon: AlertCircle },
+            { label: 'Activity', value: repository.matchScore.activityScore > 5 ? 'Recent' : 'Low', icon: Clock },
+          ].map(item => {
+            const Icon = item.icon;
+            return (
+              <div key={item.label} className="brutal-card p-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-8 h-8 bg-muted flex items-center justify-center border-2 border-foreground">
+                    <Icon className="w-4 h-4" />
                   </div>
-                  <span className="font-mono font-bold text-lg">{item.value}</span>
+                  <span className="font-mono text-sm text-muted-foreground">{item.label}</span>
                 </div>
-              );
-            })}
-          </div>
-        )}
+                <span className="font-mono font-bold text-lg">{item.value}</span>
+              </div>
+            );
+          })}
+        </div>
 
         {/* Related Issues */}
         <section>
