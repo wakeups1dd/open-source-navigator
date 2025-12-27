@@ -30,7 +30,7 @@ export function RepoCard({ repository }: RepoCardProps) {
           <div className="min-w-0 flex-1">
             <Link
               to={`/repository/${repository.id}`}
-              className="font-mono font-bold text-base sm:text-lg hover:text-primary transition-colors truncate block"
+              className="font-mono font-bold text-base sm:text-lg hover:text-primary transition-colors break-words block leading-tight"
             >
               {repository.full_name}
             </Link>
