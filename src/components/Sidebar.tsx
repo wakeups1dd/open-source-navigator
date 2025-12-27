@@ -11,15 +11,20 @@ const navItems = [
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
-function SidebarContent({ className }: { className?: string }) {
+interface SidebarContentProps {
+  className?: string;
+  onMobileNav?: () => void;
+}
+
+function SidebarContent({ className, onMobileNav }: SidebarContentProps) {
   const location = useLocation();
   const { user, logout } = useAuth();
 
   return (
-    <div className={cn("flex flex-col h-full", className)}>
+    <div className={cn("flex flex-col h-full bg-card", className)}>
       {/* Logo */}
       <div className="p-6 border-b-[3px] border-foreground">
-        <Link to="/dashboard" className="flex items-center gap-3">
+        <Link to="/dashboard" className="flex items-center gap-3" onClick={onMobileNav}>
           <div className="w-10 h-10 bg-primary flex items-center justify-center border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))]">
             <Compass className="w-6 h-6 text-primary-foreground" />
           </div>
@@ -28,7 +33,7 @@ function SidebarContent({ className }: { className?: string }) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 p-4 overflow-y-auto">
         <ul className="space-y-2">
           {navItems.map(item => {
             const Icon = item.icon;
@@ -38,6 +43,7 @@ function SidebarContent({ className }: { className?: string }) {
               <li key={item.path}>
                 <Link
                   to={item.path}
+                  onClick={onMobileNav}
                   className={cn(
                     'flex items-center gap-3 px-4 py-3 font-mono font-bold text-sm uppercase',
                     'border-2 border-foreground transition-all duration-150',
@@ -56,7 +62,10 @@ function SidebarContent({ className }: { className?: string }) {
           })}
           <li>
             <button
-              onClick={logout}
+              onClick={() => {
+                logout();
+                onMobileNav?.();
+              }}
               className="flex items-center gap-3 w-full px-4 py-3 font-mono font-bold text-sm uppercase bg-background border-2 border-foreground shadow-[2px_2px_0px_0px_hsl(var(--foreground))] hover:shadow-[3px_3px_0px_0px_hsl(var(--foreground))] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all duration-150"
             >
               <LogOut className="w-4 h-4" />
@@ -67,7 +76,7 @@ function SidebarContent({ className }: { className?: string }) {
       </nav>
 
       {/* User section */}
-      <div className="p-4 border-t-[3px] border-foreground mt-auto">
+      <div className="p-4 border-t-[3px] border-foreground mt-auto bg-card">
         <div className="flex items-center gap-3">
           {user?.avatar_url ? (
             <img
@@ -96,7 +105,7 @@ export function Sidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-64 min-h-screen bg-card border-r-[3px] border-foreground flex-col">
+      <aside className="hidden lg:flex w-64 min-h-screen bg-card border-r-[3px] border-foreground flex-col sticky top-0 h-screen">
         <SidebarContent />
       </aside>
 
@@ -117,7 +126,7 @@ export function Sidebar() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="p-0 border-r-[3px] border-foreground w-72">
-            <SidebarContent />
+            <SidebarContent onMobileNav={() => setOpen(false)} />
           </SheetContent>
         </Sheet>
       </div>

@@ -92,13 +92,13 @@ export default function Dashboard() {
 
       <main className="flex-1 p-4 lg:p-8 overflow-auto">
         {/* Header */}
-        <div className="mb-8 hidden lg:block">
-          <div className="flex items-center justify-between">
+        <div className="mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="font-mono font-bold text-3xl mb-2">
+              <h1 className="font-mono font-bold text-2xl lg:text-3xl mb-2">
                 Welcome back, {user?.name || 'Developer'}
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-sm lg:text-base">
                 Here are your personalized recommendations based on real GitHub data
               </p>
             </div>
@@ -106,7 +106,7 @@ export default function Dashboard() {
               variant="outline"
               size="sm"
               onClick={refetch}
-              className="gap-2"
+              className="gap-2 w-full sm:w-auto"
             >
               <RefreshCw className="w-4 h-4" />
               Refresh
