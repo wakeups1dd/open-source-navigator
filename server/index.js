@@ -79,11 +79,12 @@ app.get('/auth/github/callback', async (req, res) => {
             where: { githubId: userData.id.toString() },
             update: {
                 username: userData.login,
-                // We don't overwrite preferences here to preserve user settings
+                email: userData.email, // Update email if it changes
             },
             create: {
                 githubId: userData.id.toString(),
                 username: userData.login,
+                email: userData.email,
                 preferences: '{}', // Default empty preferences
             },
         });
