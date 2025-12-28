@@ -61,6 +61,19 @@ export function useAuth() {
     window.location.href = githubAuthUrl;
   };
 
+  const loginWithGoogle = () => {
+    setIsLoading(true);
+    const baseUrl = window.location.origin;
+    const isLocalDevelopment = baseUrl.includes('localhost:8080');
+    // For local dev, hit the mock server directly
+    // For prod, hit the /api/auth endpoint
+    const authUrl = isLocalDevelopment
+      ? 'http://localhost:3001/auth/google'
+      : `${baseUrl}/api/auth/google`;
+
+    window.location.href = authUrl;
+  };
+
   // Handle OAuth callback
   const handleCallback = (userData: User) => {
     console.log('Setting user data:', userData);
@@ -81,6 +94,7 @@ export function useAuth() {
     isLoading,
     isAuthenticated: !!user,
     login,
+    loginWithGoogle,
     logout,
     handleCallback,
   };

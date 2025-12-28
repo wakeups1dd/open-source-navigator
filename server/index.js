@@ -20,7 +20,10 @@ app.use(express.json());
 // GitHub OAuth configuration
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REDIRECT_URI = 'http://localhost:3001/auth/github/callback';
+const GOOGLE_REDIRECT_URI = 'http://localhost:3001/auth/google/callback';
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -107,6 +110,92 @@ app.get('/auth/github/callback', async (req, res) => {
         console.error('OAuth error:', error.response?.data || error.message);
         const errorDetails = error.response?.data?.error_description || error.response?.data?.error || error.message;
         res.redirect(`http://localhost:8080/login?error=auth_failed&details=${encodeURIComponent(errorDetails)}`);
+    }
+});
+
+// Google OAuth endpoints
+app.get('/auth/google', (req, res) => {
+    const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=${scope}&access_type=offline`;
+    res.redirect(authUrl);
+});
+
+app.get('/auth/google/callback', async (req, res) => {
+    const { code } = req.query;
+
+    if (!code) {
+        return res.status(400).json({ error: 'No code provided' });
+    }
+
+    try {
+        const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
+            client_id: GOOGLE_CLIENT_ID,
+            client_secret: GOOGLE_CLIENT_SECRET,
+            code,
+            grant_type: 'authorization_code',
+            redirect_uri: GOOGLE_REDIRECT_URI
+        });
+
+        const accessToken = tokenResponse.data.access_token;
+
+        const userResponse = await axios.get('https://www.googleapis.com/oauth2/v2/userinfo', {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        });
+
+        const userData = userResponse.data;
+
+        // Upsert user based on email (primary) or googleId
+        let user;
+
+        // First try to find by Google ID
+        user = await prisma.user.findUnique({
+            where: { googleId: userData.id }
+        });
+
+        if (!user && userData.email) {
+            // Then try by email to link accounts
+            user = await prisma.user.findFirst({
+                where: { email: userData.email }
+            });
+
+            if (user) {
+                // Link Google ID to existing account
+                user = await prisma.user.update({
+                    where: { id: user.id },
+                    data: { googleId: userData.id }
+                });
+            }
+        }
+
+        if (!user) {
+            // Create new user
+            user = await prisma.user.create({
+                data: {
+                    googleId: userData.id,
+                    email: userData.email,
+                    username: userData.name || userData.email.split('@')[0],
+                    avatarUrl: userData.picture,
+                    preferences: '{}'
+                }
+            });
+        }
+
+        const frontendURL = `http://localhost:8080/auth/callback?user=${encodeURIComponent(
+            JSON.stringify({
+                id: user.googleId || user.githubId, // specific logic for frontend might need adjustment, but assuming ID works
+                login: user.username,
+                name: user.username,
+                avatar_url: userData.picture,
+                email: userData.email,
+                dbUser: user
+            })
+        )}`;
+
+        res.redirect(frontendURL);
+
+    } catch (error) {
+        console.error('Google OAuth error:', error.response?.data || error.message);
+        res.redirect(`http://localhost:8080/login?error=auth_failed&details=${encodeURIComponent('Google login failed')}`);
     }
 });
 
