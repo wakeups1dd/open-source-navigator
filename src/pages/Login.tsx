@@ -43,8 +43,7 @@ export default function Login() {
           </h2>
 
           <p className="text-lg text-muted-foreground mb-10 max-w-md">
-            Discover GitHub repositories and issues tailored to your skills.
-            Start contributing to open source today.
+
           </p>
 
           {/* Features */}
