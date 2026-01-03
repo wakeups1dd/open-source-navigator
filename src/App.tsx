@@ -117,10 +117,12 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="fixed top-4 right-4 z-50">
-          <ThemeToggle />
+        <div className="min-h-screen bg-background brutal-grid transition-colors duration-300">
+          <div className="fixed top-4 right-4 z-50">
+            <ThemeToggle />
+          </div>
+          <AppRoutes />
         </div>
-        <AppRoutes />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

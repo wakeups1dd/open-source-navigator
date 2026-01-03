@@ -7,8 +7,10 @@
 @layer base {
   :root {
     /* Neo-Brutalist Color Palette */
-    --background: 0 0% 96%; /* Off-white #F5F5F5 */
-    --foreground: 0 0% 0%; /* Pure Black */
+    --background: 0 0% 96%;
+    /* Off-white #F5F5F5 */
+    --foreground: 0 0% 0%;
+    /* Pure Black */
 
     --card: 0 0% 100%;
     --card-foreground: 0 0% 0%;
@@ -16,26 +18,31 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
 
-    --primary: 216 100% 50%; /* Electric Blue #0057FF */
+    --primary: 216 100% 50%;
+    /* Electric Blue #0057FF */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 54 100% 50%; /* Neon Yellow #FFE600 */
+    --secondary: 54 100% 50%;
+    /* Neon Yellow #FFE600 */
     --secondary-foreground: 0 0% 0%;
 
     --muted: 0 0% 90%;
     --muted-foreground: 0 0% 30%;
 
-    --accent: 54 100% 50%; /* Neon Yellow */
+    --accent: 54 100% 50%;
+    /* Neon Yellow */
     --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 0%; /* Pure Black borders */
+    --border: 0 0% 0%;
+    /* Pure Black borders */
     --input: 0 0% 0%;
     --ring: 216 100% 50%;
 
-    --radius: 0px; /* No border radius - sharp corners */
+    --radius: 0px;
+    /* No border radius - sharp corners */
 
     /* Custom Neo-Brutalist tokens */
     --shadow-offset: 4px;
@@ -53,42 +60,57 @@
   }
 
   .dark {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 96%;
+    --background: 240 10% 4%;
+    /* Deep Charcoal #0A0A0B */
+    --foreground: 0 0% 100%;
+    /* Pure White */
 
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 96%;
+    --card: 240 10% 8%;
+    /* Slightly lighter charcoal #131316 */
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 96%;
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 216 100% 50%;
+    --primary: 216 100% 60%;
+    /* Brighter Electric Blue #337BFF */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 54 100% 50%;
+    /* Neon Yellow #FFE600 */
     --secondary-foreground: 0 0% 0%;
 
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 240 10% 15%;
+    --muted-foreground: 240 5% 70%;
 
-    --accent: 54 100% 50%;
+    --accent: 180 100% 50%;
+    /* Cyan accent for extra pop */
     --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 0 0% 96%;
+    --destructive: 0 100% 60%;
+    --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 100%;
+    /* White borders in dark mode */
     --input: 0 0% 100%;
-    --ring: 216 100% 50%;
+    --ring: 216 100% 60%;
 
-    --sidebar-background: 0 0% 10%;
-    --sidebar-foreground: 0 0% 96%;
-    --sidebar-primary: 216 100% 50%;
+    --sidebar-background: 240 10% 6%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 216 100% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 54 100% 50%;
     --sidebar-accent-foreground: 0 0% 0%;
     --sidebar-border: 0 0% 100%;
-    --sidebar-ring: 216 100% 50%;
+    --sidebar-ring: 216 100% 60%;
+  }
+}
+
+@layer base {
+  .brutal-grid {
+    background-image:
+      radial-gradient(circle at 1px 1px, hsl(var(--foreground) / 0.1) 1px, transparent 0);
+    background-size: 24px 24px;
   }
 }
 
@@ -101,12 +123,18 @@
     @apply bg-background text-foreground font-sans overflow-x-hidden;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-mono font-bold tracking-tight;
   }
 }
 
 @layer components {
+
   /* Neo-Brutalist Card */
   .brutal-card {
     @apply bg-card border-brutal shadow-brutal transition-all duration-150;
@@ -118,9 +146,7 @@
 
   /* Neo-Brutalist Button Base */
   .brutal-btn {
-    @apply font-mono font-bold uppercase tracking-wide border-brutal shadow-brutal 
-           transition-all duration-150 active:translate-x-1 active:translate-y-1 
-           active:shadow-none;
+    @apply font-mono font-bold uppercase tracking-wide border-brutal shadow-brutal transition-all duration-150 active:translate-x-1 active:translate-y-1 active:shadow-none;
   }
 
   .brutal-btn:hover {
@@ -151,14 +177,12 @@
 
   /* Skill tag */
   .skill-tag {
-    @apply inline-flex items-center px-3 py-1 font-mono text-sm font-bold 
-           border-brutal-thin bg-background;
+    @apply inline-flex items-center px-3 py-1 font-mono text-sm font-bold border-brutal-thin bg-background;
   }
 
   /* Score badge */
   .score-badge {
-    @apply inline-flex items-center justify-center w-12 h-12 font-mono font-bold 
-           text-lg border-brutal bg-secondary text-secondary-foreground;
+    @apply inline-flex items-center justify-center w-12 h-12 font-mono font-bold text-lg border-brutal bg-secondary text-secondary-foreground;
   }
 }
 
@@ -180,6 +204,7 @@
       opacity: 0;
       transform: translateY(10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -190,6 +215,7 @@
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
