@@ -11,6 +11,7 @@ const defaultPreferences: UserPreferences = {
   frameworks: [],
   experienceLevel: 'beginner',
   isOnboarded: false,
+  theme: 'light',
 };
 
 export function useUserPreferences() {
@@ -19,6 +20,16 @@ export function useUserPreferences() {
     const stored = localStorage.getItem(STORAGE_KEY);
     return stored ? JSON.parse(stored) : defaultPreferences;
   });
+
+  // Apply theme class to document root
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (preferences.theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [preferences.theme]);
 
   // Sync with database when user logs in
   useEffect(() => {
@@ -70,6 +81,17 @@ export function useUserPreferences() {
     setPreferences(prev => ({ ...prev, experienceLevel }));
   };
 
+  const toggleTheme = () => {
+    setPreferences(prev => ({
+      ...prev,
+      theme: prev.theme === 'light' ? 'dark' : 'light'
+    }));
+  };
+
+  const setTheme = (theme: 'light' | 'dark') => {
+    setPreferences(prev => ({ ...prev, theme }));
+  };
+
   const completeOnboarding = () => {
     console.log('Setting isOnboarded to true');
     setPreferences(prev => {
@@ -89,6 +111,8 @@ export function useUserPreferences() {
     updateLanguages,
     updateFrameworks,
     updateExperienceLevel,
+    toggleTheme,
+    setTheme,
     completeOnboarding,
     resetPreferences,
   };

@@ -5,6 +5,7 @@ export interface UserPreferences {
   frameworks: string[];
   experienceLevel: ExperienceLevel;
   isOnboarded: boolean;
+  theme: 'light' | 'dark';
 }
 
 export interface Repository {

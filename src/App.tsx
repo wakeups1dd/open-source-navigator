@@ -109,12 +109,17 @@ const AppRoutes = () => (
   </Routes>
 );
 
+import { ThemeToggle } from "./components/ThemeToggle";
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <div className="fixed top-4 right-4 z-50">
+          <ThemeToggle />
+        </div>
         <AppRoutes />
       </BrowserRouter>
     </TooltipProvider>
